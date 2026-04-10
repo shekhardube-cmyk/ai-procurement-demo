@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate RFQ</title>
+</head>
+<body>
+
+<h2>Generate RFQ</h2>
+
+<form id="rfqForm">
+  <input type="text" id="item" placeholder="Item Name" required><br><br>
+  <input type="number" id="quantity" placeholder="Quantity" required><br><br>
+  <input type="date" id="date" required><br><br>
+  <button type="submit">Generate RFQ</button>
+</form>
+
+<pre id="output"></pre>
+
+<script>
+document.getElementById("rfqForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const data = {
+    item: document.getElementById("item").value,
+    quantity: document.getElementById("quantity").value,
+    date: document.getElementById("date").value
+  };
+
+  const res = await fetch("/generate-rfq", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.text();
+  document.getElementById("output").innerText = result;
+});
+</script>
+
+</body>
+</html>
