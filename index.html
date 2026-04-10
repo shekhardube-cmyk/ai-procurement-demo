@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Procurement Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial; background:#f4f6f9; margin:0; }
+    .header { background:#2c3e50; color:white; padding:15px; font-size:20px; }
+    .container { padding:20px; }
+    .card { background:white; padding:15px; margin-bottom:20px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+    button { padding:10px 15px; background:#3498db; color:white; border:none; border-radius:5px; cursor:pointer; }
+    textarea { width:100%; height:80px; }
+    table { width:100%; border-collapse: collapse; margin-top:10px; }
+    table, th, td { border:1px solid #ddd; }
+    th, td { padding:8px; text-align:left; }
+  </style>
+</head>
+<body>
+
+<div class="header">AI Procurement Demo (SAP/Oracle Compatible)</div>
+
+<div class="container">
+
+  <!-- Step 1 -->
+  <div class="card">
+    <h3>1. Enter Requirement</h3>
+    <textarea id="requirement" placeholder="Enter item, quantity, specs..."></textarea>
+    <br><br>
+    <button onclick="generateRFQ()">Generate RFQ</button>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="card">
+    <h3>2. RFQ Output</h3>
+    <div id="rfqOutput"></div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="card">
+    <h3>3. Vendor Comparison</h3>
+    <button onclick="loadVendors()">Simulate Vendor Quotes</button>
+    <table id="vendorTable"></table>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="card">
+    <h3>4. Generate Purchase Order</h3>
+    <button onclick="generatePO()">Generate PO</button>
+    <div id="poOutput"></div>
+  </div>
+
+  <!-- ROI Chart -->
+  <div class="card">
+    <h3>ROI Impact</h3>
+    <canvas id="roiChart"></canvas>
+  </div>
+
+</div>
+
+<script>
+
+function generateRFQ() {
+  const req = document.getElementById("requirement").value;
+  document.getElementById("rfqOutput").innerHTML = `
+    <b>RFQ Generated:</b><br>
+    Item: ${req}<br>
+    Quantity: 100 Units<br>
+    Delivery: 2 Weeks<br>
+    Please submit your quotation.
+  `;
+}
+
+function loadVendors() {
+  const table = document.getElementById("vendorTable");
+  table.innerHTML = `
+    <tr><th>Vendor</th><th>Price</th><th>Delivery</th></tr>
+    <tr><td>Vendor A</td><td>₹1000</td><td>10 Days</td></tr>
+    <tr><td>Vendor B</td><td>₹950</td><td>12 Days</td></tr>
+    <tr><td>Vendor C</td><td>₹1100</td><td>7 Days</td></tr>
+  `;
+}
+
+function generatePO() {
+  document.getElementById("poOutput").innerHTML = `
+    <b>PO Created:</b><br>
+    Selected Vendor: Vendor B<br>
+    Total Cost: ₹950<br>
+    Delivery: 12 Days
+  `;
+
+  renderChart();
+}
+
+function renderChart() {
+  const ctx = document.getElementById('roiChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Before AI', 'After AI'],
+      datasets: [{
+        label: 'Cost',
+        data: [1100, 950]
+      }]
+    }
+  });
+}
+
+</script>
+
+</body>
+</html>
