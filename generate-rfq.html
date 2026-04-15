@@ -1,29 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AI RFQ Generator</title>
+  <title>AI Procurement Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: Arial; background:#f4f6f9; padding:20px; }
-    input, button { padding:10px; width:250px; margin:5px 0; }
+    input, button { padding:10px; margin:5px 0; }
     button { background:#3498db; color:white; border:none; cursor:pointer; }
-    pre { background:#fff; padding:15px; border-radius:5px; }
+    .card { background:white; padding:15px; margin-bottom:15px; border-radius:8px; }
+    table { width:100%; border-collapse: collapse; }
+    table, th, td { border:1px solid #ddd; }
+    th, td { padding:8px; }
   </style>
 </head>
 <body>
 
-<h2>AI RFQ Generator</h2>
+<h2>AI Procurement Demo</h2>
 
+<div class="card">
+<h3>1. Generate RFQ</h3>
 <form id="rfqForm">
   <input type="text" id="item" placeholder="Item Name" required><br>
   <input type="number" id="quantity" placeholder="Quantity" required><br>
   <input type="date" id="date" required><br>
   <button type="submit">Generate RFQ</button>
 </form>
+<pre id="rfqOutput"></pre>
+</div>
 
-<h3>Output:</h3>
-<pre id="output">No data yet...</pre>
+<div class="card">
+<h3>2. Vendor Comparison</h3>
+<button onclick="loadVendors()">Load Vendor Quotes</button>
+<table id="vendorTable"></table>
+</div>
+
+<div class="card">
+<h3>3. Generate PO</h3>
+<button onclick="generatePO()">Generate PO</button>
+<pre id="poOutput"></pre>
+</div>
+
+<div class="card">
+<h3>4. ROI Impact</h3>
+<canvas id="roiChart"></canvas>
+</div>
 
 <script>
+
+// RFQ API Call
+
 document.getElementById("rfqForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
@@ -34,24 +59,48 @@ document.getElementById("rfqForm").addEventListener("submit", async function(e) 
   };
 
   try {
-    const res = await fetch("https://ai-procurement-demo.onrender.com//generate-rfq", {
+    const res = await fetch("https://your-app-name.onrender.com/generate-rfq", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
     });
 
-    if (!res.ok) {
-      throw new Error("Server error: " + res.status);
-    }
-
     const result = await res.json();
+    document.getElementById("rfqOutput").innerText = result.rfq;
 
-    document.getElementById("output").innerText = result.rfq || JSON.stringify(result, null, 2);
-
-  } catch (error) {
-    document.getElementById("output").innerText = "Error: " + error.message;
+  } catch (err) {
+    document.getElementById("rfqOutput").innerText = "Error: " + err.message;
   }
 });
+
+// Vendor Simulation
+function loadVendors() {
+  document.getElementById("vendorTable").innerHTML = `
+    <tr><th>Vendor</th><th>Price</th><th>Delivery</th><th>Score</th></tr>
+    <tr><td>A</td><td>1000</td><td>10 Days</td><td>80</td></tr>
+    <tr><td>B</td><td>950</td><td>12 Days</td><td>85 ⭐ Best</td></tr>
+    <tr><td>C</td><td>1100</td><td>7 Days</td><td>75</td></tr>
+  `;
+}
+
+// PO Generation
+function generatePO() {
+  document.getElementById("poOutput").innerText = `PO Created:\nVendor: B\nCost: 950\nDelivery: 12 Days`;
+  renderChart();
+}
+
+// ROI Chart
+function renderChart() {
+  const ctx = document.getElementById('roiChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Before AI', 'After AI'],
+      datasets: [{ data: [1100, 950] }]
+    }
+  });
+}
+
 </script>
 
 </body>
