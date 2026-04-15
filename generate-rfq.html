@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Generate RFQ</title>
+  <title>AI RFQ Generator</title>
+  <style>
+    body { font-family: Arial; background:#f4f6f9; padding:20px; }
+    input, button { padding:10px; width:250px; margin:5px 0; }
+    button { background:#3498db; color:white; border:none; cursor:pointer; }
+    pre { background:#fff; padding:15px; border-radius:5px; }
+  </style>
 </head>
 <body>
 
-<h2>Generate RFQ</h2>
+<h2>AI RFQ Generator</h2>
 
 <form id="rfqForm">
-  <input type="text" id="item" placeholder="Item Name" required><br><br>
-  <input type="number" id="quantity" placeholder="Quantity" required><br><br>
-  <input type="date" id="date" required><br><br>
+  <input type="text" id="item" placeholder="Item Name" required><br>
+  <input type="number" id="quantity" placeholder="Quantity" required><br>
+  <input type="date" id="date" required><br>
   <button type="submit">Generate RFQ</button>
 </form>
 
-<pre id="output"></pre>
+<h3>Output:</h3>
+<pre id="output">No data yet...</pre>
 
 <script>
 document.getElementById("rfqForm").addEventListener("submit", async function(e) {
@@ -26,14 +33,24 @@ document.getElementById("rfqForm").addEventListener("submit", async function(e) 
     date: document.getElementById("date").value
   };
 
-  const res = await fetch("/generate-rfq", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(data)
-  });
+  try {
+    const res = await fetch("https://your-app-name.onrender.com/generate-rfq", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
 
-  const result = await res.text();
-  document.getElementById("output").innerText = result;
+    if (!res.ok) {
+      throw new Error("Server error: " + res.status);
+    }
+
+    const result = await res.json();
+
+    document.getElementById("output").innerText = result.rfq || JSON.stringify(result, null, 2);
+
+  } catch (error) {
+    document.getElementById("output").innerText = "Error: " + error.message;
+  }
 });
 </script>
 
