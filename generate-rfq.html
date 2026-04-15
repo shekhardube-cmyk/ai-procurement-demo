@@ -59,7 +59,7 @@ document.getElementById("rfqForm").addEventListener("submit", async function(e) 
   };
 
   try {
-    const res = await fetch("https://your-app-name.onrender.com/generate-rfq", {
+    const res = await fetch("https://ai-procurement-demo.onrender.com/generate-rfq", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
